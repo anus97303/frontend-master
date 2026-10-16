@@ -1,4 +1,6 @@
 import { ReactComponent as PlusIcon } from "./plus.svg?react";
+import { ReactComponent as MortarboardIcon } from "./mortarboard.svg?react";
+import { ReactComponent as SchoolIcon } from "./school.svg?react";
 import { ReactComponent as CloseIcon } from "./close.svg?react";
 import { ReactComponent as BoxIcon } from "./box.svg?react";
 import { ReactComponent as CheckCircleIcon } from "./check-circle.svg?react";
@@ -242,4 +244,6 @@ export {
   SystemIcon,
   TextIcon,
   UserAltIcon,
+  MortarboardIcon,
+  SchoolIcon,
 };

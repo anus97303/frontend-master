@@ -1,0 +1,279 @@
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import PageMeta from '@/components/common/PageMeta';
+import PageBreadcrumb from '@/components/common/PageBreadCrumb';
+import Button from '@/components/ui/button/Button';
+import Input from '@/components/form/input/InputField';
+import Label from '@/components/form/Label';
+import { useAuth } from '@/context/AuthContext';
+import { useLanguage } from '@/context/LanguageContext';
+import { api } from '@/services/api';
+import { CheckCircleIcon } from '@/icons';
+
+interface SettingsData {
+  schoolName: string;
+  tagline: string;
+  schoolEmail: string;
+  schoolPhone: string;
+  address: string;
+  principalName: string;
+  currentAcademicYear: string;
+  currencySymbol: string;
+  website: string;
+}
+
+export default function SchoolSettings() {
+  const { t } = useTranslation();
+  const { user } = useAuth();
+  const { language, setLanguage, availableLanguages } = useLanguage();
+  const [formData, setFormData] = useState<SettingsData>({
+    schoolName: '',
+    tagline: '',
+    schoolEmail: '',
+    schoolPhone: '',
+    address: '',
+    principalName: '',
+    currentAcademicYear: '2025-2026',
+    currencySymbol: '$',
+    website: '',
+  });
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [successMsg, setSuccessMsg] = useState<string>('');
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const data = await api.get<SettingsData>('/settings');
+        setFormData(data);
+      } catch (err) {
+        console.error('Failed to load school settings', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchSettings();
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSaving(true);
+    setSuccessMsg('');
+    try {
+      await api.put('/settings', formData);
+      setSuccessMsg('School settings successfully updated!');
+      setTimeout(() => setSuccessMsg(''), 4000);
+    } catch (err) {
+      console.error('Failed to save settings', err);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const canManage = user?.role === 'admin';
+
+  return (
+    <>
+      <PageMeta
+        title="School Settings & Profile | TailAdmin - School Management"
+        description="Configure institution profile, academic sessions, and localized preferences"
+      />
+      <PageBreadcrumb pageTitle={t('school.settings', 'School Settings & Profile')} />
+
+      {successMsg && (
+        <div className="mb-6 flex items-center gap-3 rounded-xl border border-success-200 bg-success-50 p-4 text-sm font-semibold text-success-700 dark:border-success-500/20 dark:bg-success-500/10 dark:text-success-400">
+          <CheckCircleIcon className="size-5 shrink-0" />
+          <span>{successMsg}</span>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        {/* Main Settings Form */}
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-theme-xs dark:border-gray-800 dark:bg-gray-900 lg:col-span-2">
+          <h3 className="mb-4 text-base font-bold text-gray-800 dark:text-white/90">
+            Institution Profile Information
+          </h3>
+
+          <form onSubmit={handleSave} className="space-y-4">
+            <div>
+              <Label htmlFor="schoolName">{t('school.schoolName', 'Institution Name')} *</Label>
+              <Input
+                id="schoolName"
+                name="schoolName"
+                value={formData.schoolName}
+                onChange={handleChange}
+                disabled={!canManage}
+                required
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="tagline">School Motto / Tagline</Label>
+              <Input
+                id="tagline"
+                name="tagline"
+                value={formData.tagline}
+                onChange={handleChange}
+                disabled={!canManage}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <Label htmlFor="schoolEmail">{t('school.schoolEmail', 'Official Email')} *</Label>
+                <Input
+                  id="schoolEmail"
+                  name="schoolEmail"
+                  type="email"
+                  value={formData.schoolEmail}
+                  onChange={handleChange}
+                  disabled={!canManage}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="schoolPhone">{t('school.schoolPhone', 'Phone Number')} *</Label>
+                <Input
+                  id="schoolPhone"
+                  name="schoolPhone"
+                  value={formData.schoolPhone}
+                  onChange={handleChange}
+                  disabled={!canManage}
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="address">{t('school.address', 'Campus Address')}</Label>
+              <Input
+                id="address"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                disabled={!canManage}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+              <div>
+                <Label htmlFor="principalName">{t('school.principalName', 'Principal / Dean')}</Label>
+                <Input
+                  id="principalName"
+                  name="principalName"
+                  value={formData.principalName}
+                  onChange={handleChange}
+                  disabled={!canManage}
+                />
+              </div>
+              <div>
+                <Label htmlFor="currentAcademicYear">{t('school.academicYear', 'Academic Year')}</Label>
+                <Input
+                  id="currentAcademicYear"
+                  name="currentAcademicYear"
+                  value={formData.currentAcademicYear}
+                  onChange={handleChange}
+                  disabled={!canManage}
+                />
+              </div>
+              <div>
+                <Label htmlFor="currencySymbol">{t('school.currencySymbol', 'Currency Symbol')}</Label>
+                <Input
+                  id="currencySymbol"
+                  name="currencySymbol"
+                  value={formData.currencySymbol}
+                  onChange={handleChange}
+                  disabled={!canManage}
+                />
+              </div>
+            </div>
+
+            {canManage && (
+              <div className="flex justify-end pt-4">
+                <Button type="submit" size="sm" disabled={isSaving || isLoading}>
+                  {isSaving ? 'Saving...' : 'Save Settings'}
+                </Button>
+              </div>
+            )}
+          </form>
+        </div>
+
+        {/* Side Panel: Language & Grading Info */}
+        <div className="space-y-6">
+          {/* Language Switcher Card */}
+          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-theme-xs dark:border-gray-800 dark:bg-gray-900">
+            <h3 className="mb-2 text-base font-bold text-gray-800 dark:text-white/90">
+              Interface Language (i18n)
+            </h3>
+            <p className="mb-4 text-xs text-gray-500 dark:text-gray-400">
+              Select your preferred language. Includes Arabic with complete RTL layout support.
+            </p>
+
+            <div className="space-y-2">
+              {availableLanguages.map((lang) => (
+                <button
+                  key={lang.code}
+                  type="button"
+                  onClick={() => setLanguage(lang.code)}
+                  className={`flex w-full items-center justify-between rounded-xl border p-3 text-sm font-medium transition ${
+                    language === lang.code
+                      ? 'border-brand-500 bg-brand-50 text-brand-600 dark:bg-brand-500/15 dark:text-brand-400'
+                      : 'border-gray-200 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800'
+                  }`}
+                >
+                  <span>{lang.name}</span>
+                  <span className="text-xs uppercase text-gray-400">
+                    {lang.code} • {lang.dir}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Standard Grading System Rules */}
+          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-theme-xs dark:border-gray-800 dark:bg-gray-900">
+            <h3 className="mb-2 text-base font-bold text-gray-800 dark:text-white/90">
+              Official Grading Scale
+            </h3>
+            <p className="mb-4 text-xs text-gray-500 dark:text-gray-400">
+              Configured per institutional academic policy:
+            </p>
+
+            <div className="space-y-2 text-xs">
+              <div className="flex justify-between rounded-lg bg-gray-50 p-2 dark:bg-gray-800">
+                <span className="font-bold text-success-600">A+ (Distinction)</span>
+                <span>≥ 90%</span>
+              </div>
+              <div className="flex justify-between rounded-lg bg-gray-50 p-2 dark:bg-gray-800">
+                <span className="font-bold text-success-600">A (Excellent)</span>
+                <span>≥ 80%</span>
+              </div>
+              <div className="flex justify-between rounded-lg bg-gray-50 p-2 dark:bg-gray-800">
+                <span className="font-bold text-brand-600">B (Very Good)</span>
+                <span>≥ 70%</span>
+              </div>
+              <div className="flex justify-between rounded-lg bg-gray-50 p-2 dark:bg-gray-800">
+                <span className="font-bold text-warning-600">C (Satisfactory)</span>
+                <span>≥ 60%</span>
+              </div>
+              <div className="flex justify-between rounded-lg bg-gray-50 p-2 dark:bg-gray-800">
+                <span className="font-bold text-warning-600">D (Pass)</span>
+                <span>≥ 50%</span>
+              </div>
+              <div className="flex justify-between rounded-lg bg-gray-50 p-2 dark:bg-gray-800">
+                <span className="font-bold text-error-600">F (Fail)</span>
+                <span>&lt; 50%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}

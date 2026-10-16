@@ -1,12 +1,13 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import AppLayout from "./layout/AppLayout";
+import ProtectedRoute from "./routes/ProtectedRoute";
 import SignIn from "./pages/AuthPages/SignIn";
 import SignUp from "./pages/AuthPages/SignUp";
 import Calendar from "./pages/Calendar";
 import BarChart from "./pages/Charts/BarChart";
 import LineChart from "./pages/Charts/LineChart";
-import Home from "./pages/Dashboard/Ecommerce";
+import EcommerceHome from "./pages/Dashboard/Ecommerce";
 import FormElements from "./pages/Forms/FormElements";
 import Blank from "./pages/OtherPage/Blank";
 import NotFound from "./pages/OtherPage/NotFound";
@@ -19,6 +20,18 @@ import Images from "./pages/UiElements/Images";
 import Videos from "./pages/UiElements/Videos";
 import UserProfiles from "./pages/UserProfiles";
 
+// School Management Pages
+import SchoolDashboard from "./pages/School/SchoolDashboard";
+import StudentList from "./pages/School/Students/StudentList";
+import StudentProfile from "./pages/School/Students/StudentProfile";
+import TeacherList from "./pages/School/Teachers/TeacherList";
+import ClassList from "./pages/School/Classes/ClassList";
+import AttendanceManage from "./pages/School/Attendance/AttendanceManage";
+import ExamList from "./pages/School/Exams/ExamList";
+import FeeManage from "./pages/School/Fees/FeeManage";
+import NoticeList from "./pages/School/Notices/NoticeList";
+import SchoolSettings from "./pages/School/Settings/SchoolSettings";
+
 export default function App() {
   return (
     <>
@@ -27,37 +40,47 @@ export default function App() {
         <Routes>
           {/* Dashboard Layout */}
           <Route element={<AppLayout />}>
-            <Route index path="/" element={<Home />} />
+            {/* Primary School Management Routes (Protected) */}
+            <Route index path="/" element={<ProtectedRoute><SchoolDashboard /></ProtectedRoute>} />
+            <Route path="/school" element={<ProtectedRoute><SchoolDashboard /></ProtectedRoute>} />
+            <Route path="/school/students" element={<ProtectedRoute><StudentList /></ProtectedRoute>} />
+            <Route path="/school/students/:id" element={<ProtectedRoute><StudentProfile /></ProtectedRoute>} />
+            <Route
+              path="/school/teachers"
+              element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><TeacherList /></ProtectedRoute>}
+            />
+            <Route path="/school/classes" element={<ProtectedRoute><ClassList /></ProtectedRoute>} />
+            <Route
+              path="/school/attendance"
+              element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AttendanceManage /></ProtectedRoute>}
+            />
+            <Route path="/school/exams" element={<ProtectedRoute><ExamList /></ProtectedRoute>} />
+            <Route path="/school/fees" element={<ProtectedRoute><FeeManage /></ProtectedRoute>} />
+            <Route path="/school/notices" element={<ProtectedRoute><NoticeList /></ProtectedRoute>} />
+            <Route path="/school/settings" element={<ProtectedRoute><SchoolSettings /></ProtectedRoute>} />
 
-            {/* Others Page */}
+            {/* Template Pages */}
+            <Route path="/ecommerce" element={<EcommerceHome />} />
             <Route path="/profile" element={<UserProfiles />} />
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/blank" element={<Blank />} />
-
-            {/* Forms */}
             <Route path="/form-elements" element={<FormElements />} />
-
-            {/* Tables */}
             <Route path="/basic-tables" element={<BasicTables />} />
-
-            {/* Ui Elements */}
             <Route path="/alerts" element={<Alerts />} />
             <Route path="/avatars" element={<Avatars />} />
             <Route path="/badge" element={<Badges />} />
             <Route path="/buttons" element={<Buttons />} />
             <Route path="/images" element={<Images />} />
             <Route path="/videos" element={<Videos />} />
-
-            {/* Charts */}
             <Route path="/line-chart" element={<LineChart />} />
             <Route path="/bar-chart" element={<BarChart />} />
           </Route>
 
-          {/* Auth Layout */}
+          {/* Standalone Auth Pages */}
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
 
-          {/* Fallback Route */}
+          {/* 404 Fallback */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>

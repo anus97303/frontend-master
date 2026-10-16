@@ -1,226 +1,188 @@
-# TailAdmin React - Free React Tailwind Admin Dashboard Template
+# School Management System (MERN) & TailAdmin React Pro
 
-TailAdmin is a free and open-source admin dashboard template built on **React and Tailwind CSS**, providing developers
-with everything they need to create a comprehensive, data-driven back-end,
-dashboard, or admin panel solution for upcoming web projects.
+A full-stack, enterprise-grade **School Management System** built with **React 19**, **Vite**, **TypeScript**, **Tailwind CSS v4**, **Node.js**, **Express**, and **MongoDB (Mongoose)**.
 
-With TailAdmin, you get access to all the necessary dashboard UI components, elements, and pages required to build a
-feature-rich and complete dashboard or admin panel. Whether you're building dashboard or admin panel for a complex web
-application or a simple website, TailAdmin is the perfect solution to help you get up and running quickly.
+---
 
-![TailAdmin React.js Dashboard Preview](./banner.png)
+## 🌟 Key Features
 
-## Overview
+- **Multi-Role Access Control (RBAC)**: Distinct permissions for `admin`, `teacher`, `student`, and `parent`.
+- **School Dashboard**: Live KPI cards (Students, Teachers, Classes, Fees), weekly attendance charts (ApexCharts), recent admissions, upcoming exam term widgets, and institutional noticeboard.
+- **Students Management**:
+  - Full CRUD with automated ID generator (`STU-YYYY-XXXX`).
+  - Search, class filter, pagination, student avatar uploads, guardian contact info.
+  - Dedicated **Student Profile Page**: Tabular bio, attendance percentage tracker, exam report cards, and fee payment history.
+- **Teachers & Faculty**:
+  - Full CRUD with automated ID generator (`TCH-YYYY-XXXX`).
+  - Department filtering, class teacher designations, contact info, and assigned classes.
+- **Classes & Sections**:
+  - Manage classes, sections, room numbers, student capacities, and assigned class teachers.
+  - Subject mappings with weekly period allocations.
+- **Daily Attendance System**:
+  - Class-wise daily attendance roster.
+  - Statuses: `Present`, `Absent`, `Late`, `Leave`.
+  - One-click "Mark All Present" & bulk database sync.
+  - Duplicate check: strict one attendance record per student per date.
+- **Examinations & Marksheet Matrix**:
+  - Exam term scheduling (Midterm, Final, Quarterly).
+  - Class marksheet grid with live auto-grading:
+    - `A+` ($\ge 90\%$)
+    - `A` ($\ge 80\%$)
+    - `B` ($\ge 70\%$)
+    - `C` ($\ge 60\%$)
+    - `D` ($\ge 50\%$)
+    - `F` ($< 50\%$)
+  - **Printable Student Report Card Modal** with total marks, percentage, and teacher remarks.
+- **Fee Management**:
+  - Auto-generated receipt numbers (`REC-YYYY-XXXX`).
+  - Record full or partial payments across cash, card, bank transfer, and online.
+  - Status tracking: `Paid`, `Partial`, `Pending`, `Cancelled`.
+  - Soft-cancellation with mandatory audit reason (fee records are immutable).
+  - **Printable Payment Receipt Modal**.
+- **Notice Board / Announcements**:
+  - Role-targeted broadcasts (`All`, `Teacher`, `Student`, `Parent`).
+  - Priority levels (`Low`, `Medium`, `High`).
+- **Institutional Settings**:
+  - School profile, logo/seal, academic year, grading scale, and multi-language switching (`en`, `ar`, `es`, `de`).
 
-TailAdmin provides essential UI components and layouts for building feature-rich, data-driven admin dashboards and
-control panels. It's built on:
+---
 
-- React 19
-- TypeScript
-- Tailwind CSS v4
-
-### Quick Links
-
-- [✨ Visit Website](https://tailadmin.com)
-- [📄 Documentation](https://tailadmin.com/docs)
-- [⬇️ Download](https://tailadmin.com/download)
-- [🖌️ Figma Design File (Community Edition)](https://www.figma.com/community/file/1214477970819985778)
-- [⚡ Get PRO Version](https://tailadmin.com/pricing)
-
-### Demos
-
-- [Free Version](https://free-react-demo.tailadmin.com/)
-- [Pro Version](https://react-demo.tailadmin.com)
-
-### Other Versions
-
-- [HTML Version](https://github.com/TailAdmin/tailadmin-free-tailwind-dashboard-template)
-- [Next.js Version](https://github.com/TailAdmin/free-nextjs-admin-dashboard)
-- [Vue.js Version](https://github.com/TailAdmin/vue-tailwind-admin-dashboard)
-- [Angular Version](https://github.com/TailAdmin/free-angular-tailwind-dashboard)
-- [Laravel Version](https://github.com/TailAdmin/tailadmin-laravel)
-
-## Installation
+## 🚀 Quick Start Guide
 
 ### Prerequisites
+- **Node.js**: `>= 20.19.0` or `>= 22.12.0`
+- **MongoDB**: Local MongoDB community server running on `mongodb://127.0.0.1:27017` or a MongoDB Atlas connection string.
 
-To get started with TailAdmin, ensure you have the following prerequisites installed and set up:
+---
 
-- Node.js 20.x or later
+### Step 1: Backend Setup & Database Seeding
 
-### Cloning the Repository
+1. Navigate to the backend directory:
+   ```bash
+   cd server
+   ```
 
-Clone the repository using the following command:
+2. Dependencies are already installed (`express`, `mongoose`, `jsonwebtoken`, `bcryptjs`, `multer`, `cors`, `dotenv`, `express-validator`, `helmet`, `express-rate-limit`, `morgan`).
+   If starting fresh:
+   ```bash
+   npm install
+   ```
 
-```bash
-git clone https://github.com/TailAdmin/free-react-tailwind-admin-dashboard.git
+3. Ensure `.env` is configured (a pre-configured `.env` and `.env.example` are provided):
+   ```env
+   PORT=5000
+   MONGO_URI=mongodb://127.0.0.1:27017/school_management
+   JWT_SECRET=supersecretjwtkey_school_management_2026_antigravity
+   JWT_EXPIRES_IN=7d
+   CLIENT_URL=http://localhost:5173
+   NODE_ENV=development
+   ```
+
+4. **Seed the database** with sample data:
+   ```bash
+   node seed/seed.js
+   ```
+   *Creates 1 Admin, 3 Teachers, 4 Classes, 8 Subjects, 20 Students, 30 days of attendance, exam marks, fees, and notices.*
+
+5. **Start the backend server**:
+   ```bash
+   npm run dev
+   # or
+   node server.js
+   ```
+   Backend runs at: `http://localhost:5000`
+
+---
+
+### Step 2: Frontend Setup
+
+1. In the root directory (`frontend-master/`):
+   ```bash
+   npm install
+   ```
+
+2. Run the Vite development server:
+   ```bash
+   npm run dev
+   ```
+   Frontend runs at: `http://localhost:5173`
+
+3. Or build for production:
+   ```bash
+   npm run build
+   npm run preview
+   ```
+
+---
+
+## 🔑 Demo Login Accounts
+
+The database seed provides ready-to-test demo credentials:
+
+| Role | Email | Password | Quick Login |
+| :--- | :--- | :--- | :--- |
+| **Admin** | `admin@school.com` | `admin123` | Click **"Demo Admin"** on the Sign In page |
+| **Teacher** | `sarah.johnson@school.com` | `teacher123` | Click **"Demo Teacher"** on the Sign In page |
+| **Student** | `student1@school.com` | `student123` | Click **"Demo Student"** on the Sign In page |
+
+---
+
+## 📁 Repository Structure
+
+```
+frontend-master/
+├── server/                               # Node.js + Express + MongoDB Backend
+│   ├── config/db.js                      # Mongoose database connection
+│   ├── controllers/                      # auth, dashboard, student, teacher, class,
+│   │                                     # attendance, exam, fee, notice, settings
+│   ├── models/                           # User, Student, Teacher, Class, Subject,
+│   │                                     # Attendance, Exam, Result, Fee, Notice, Settings
+│   ├── routes/                           # Express REST route definitions
+│   ├── middleware/                       # auth (JWT), role guard, validator, upload, error
+│   ├── utils/                            # response standardizer, idGenerator, gradeCalculator
+│   ├── seed/seed.js                      # Comprehensive database seeder
+│   ├── .env                              # Backend configuration
+│   └── server.js                         # Express entrypoint
+├── src/                                  # React 19 Frontend
+│   ├── pages/School/                     # School module pages
+│   │   ├── SchoolDashboard.tsx           # Institutional dashboard & analytics
+│   │   ├── Students/                     # StudentList.tsx, StudentProfile.tsx
+│   │   ├── Teachers/                     # TeacherList.tsx
+│   │   ├── Classes/                      # ClassList.tsx
+│   │   ├── Attendance/                   # AttendanceManage.tsx
+│   │   ├── Exams/                        # ExamList.tsx
+│   │   ├── Fees/                         # FeeManage.tsx
+│   │   ├── Notices/                      # NoticeList.tsx
+│   │   └── Settings/                     # SchoolSettings.tsx
+│   ├── components/school/                # Modals, Skeletons, EmptyStates, Printable Views
+│   ├── services/api.ts                   # Native fetch client with auto Bearer token
+│   ├── context/AuthContext.tsx           # Authentication state & role checks
+│   ├── routes/ProtectedRoute.tsx         # Route protection & role guard
+│   └── locales/                          # Full i18n support in en, ar, es, de
+├── API.md                                # Complete REST API specification
+└── School_Management_System.postman_collection.json # Exported Postman collection
 ```
 
-> Windows Users: place the repository near the root of your drive if you face issues while cloning.
+---
 
-1. Install dependencies:
+## 🧪 Testing with Postman
 
-    ```bash
-    npm install
-    # or
-    yarn install
-    ```
+1. Open Postman and import `School_Management_System.postman_collection.json`.
+2. The collection is configured with `{{baseUrl}}` pointing to `http://localhost:5000/api`.
+3. Running the **Auth > Login (Admin)** request automatically extracts the JWT token and saves it into the collection variable `{{token}}` for all subsequent requests.
 
-2. Start the development server:
-    ```bash
-    npm run dev
-    # or
-    yarn dev
-    ```
+---
 
-## Components
+## 🛡️ Coding & Architectural Standards
 
-TailAdmin is a pre-designed starting point for building a web-based dashboard using React.js and Tailwind CSS. The
-template includes:
-
-- Sophisticated and accessible sidebar
-- Data visualization components
-- Prebuilt profile management and 404 page
-- Tables and Charts(Line and Bar)
-- Authentication forms and input elements
-- Alerts, Dropdowns, Modals, Buttons and more
-- FAQ & Accordion, Testimonials, and Carousels
-- Can't forget Dark Mode 🕶️
-
-All components are built with React and styled using Tailwind CSS for easy customization.
-
-## Feature Comparison
-
-### Free Version
-
-- 1 Unique Dashboard
-- 35+ dashboard components
-- 50+ UI elements
-- Basic Figma design files
-- Community support
-
-### Pro Version
-
-- 7 Unique Dashboards: Analytics, Ecommerce, Marketing, CRM, SaaS, Stocks, Logistics (more coming soon)
-- 500+ dashboard components and UI elements
-- Complete Figma design file
-- Email support
-
-To learn more about pro version features and pricing, visit our [pricing page](https://tailadmin.com/pricing).
-
-## Changelog
-
-### Version 2.4.0 - [September 13, 2026]
-
-- Added Internationalization (Multi Language) support.
-- Updated complete template styles to support RTL.
-- Added Yearly View into calendar page.
-- Updated `maplibre-gl` implementation with `react-map-gl`.
-- Replaced `@react-jvectormap` with `jsvectormap`.
-- Added new requested components and fixed noted accessibility issues.
-- Updated project structure and component compositions for easy adaption.
-- Added AGENTS.md to easily work with AI Agents.
-- Updated all the packages and libraries to the latest versions. Also removed unused packages.
-
-### Version 2.3.1 - [May 23, 2026]
-
-- Added AI Settings page to configure models, keys, and token limits.
-- Added Maps page with MapLibre GL, Leaflet, and iframe styles.
-- Added Vector Maps page powered by AmCharts 5 geodata (World & USA).
-- Added Radar Charts page with 3 unique formats.
-- Added Radial Progress Charts page featuring 4 custom layout templates.
-- Introduced new Bar Charts Five & Six and Pie Charts Four & Five.
-
-### Version 2.3.0 - [April 28, 2026]
-
-- Added **AI Dashboard** with token usage and revenue tracking.
-- Added **Sales Dashboard** with retention and multi-channel analytics.
-- Added **Finance Dashboard** with cashflow and balance management.
-- Introduced **6 New Layout variations** for improved UI flexibility.
-- Integrated **Advanced Data Visualization** with 7+ new chart types.
-
-### Version 2.1.0 - [Dec 30, 2025]
-
-- Resolved Date Picker positioning and input issues in Charts.
-
-### Version 2.0.2 - [March 25, 2025]
-
-- Upgraded to React 19
-- Included overrides for packages to prevent peer dependency errors.
-- Migrated from react-flatpickr to flatpickr package for React 19 support
-
-### Version 2.0.1 - [February 27, 2025]
-
-#### Update Overview
-
-- Upgraded to Tailwind CSS v4 for better performance and efficiency.
-- Updated class usage to match the latest syntax and features.
-- Replaced deprecated class and optimized styles.
-
-#### Next Steps
-
-- Run npm install or yarn install to update dependencies.
-- Check for any style changes or compatibility issues.
-- Refer to the Tailwind CSS v4 [Migration Guide](https://tailwindcss.com/docs/upgrade-guide) on this release. if needed.
-- This update keeps the project up to date with the latest Tailwind improvements. 🚀
-
-### Version 2.0.0 - [February 2025]
-
-A major update with comprehensive redesign and modern React patterns implementation.
-
-#### Major Improvements
-
-- Complete UI redesign with modern React patterns
-- New features: collapsible sidebar, chat, and calendar
-- Improved performance and accessibility
-- Updated data visualization using ApexCharts
-
-#### Key Features
-
-- Redesigned dashboards (Ecommerce, Analytics, Marketing, CRM)
-- Enhanced navigation with React Router integration
-- Advanced tables with sorting and filtering
-- Calendar with drag-and-drop support
-- New UI components and improved existing ones
-
-#### Breaking Changes
-
-- Updated sidebar component API
-- Migrated charts to ApexCharts
-- Revised authentication system
-
-[Read more](https://tailadmin.com/docs/update-logs/react) on this release.
-
-### Version 1.3.7 - [June 20, 2024]
-
-#### Enhancements
-
-1. Remove Repetition of DefaultLayout in every Pages
-2. Add ClickOutside Component for reduce repeated functionality in Header Message, Notification and User Dropdowns.
-
-### Version 1.3.6 - [Jan 31, 2024]
-
-#### Enhancements
-
-1. Integrate flatpickr in [Date Picker/Form Elements]
-2. Change color after select an option [Select Element/Form Elements].
-3. Make it functional [Multiselect Dropdown/Form Elements].
-4. Make best value editable [Pricing Table One/Pricing Table].
-5. Rearrange Folder structure.
-
-### Version 1.2.0 - [Apr 28, 2023]
-
-- Add Typescript in TailAdmin React.
-
-### Version 1.0.0 - Initial Release - [Mar 13, 2023]
-
-- Initial release of TailAdmin React.
-
-## License
-
-TailAdmin React.js Free Version is released under the MIT License.
-
-## Support
-
-If you find this project helpful, please consider giving it a star on GitHub. Your support helps us continue developing
-and maintaining this template.
+- **Strict AGENTS.md Compliance**:
+  - CSS logical properties used throughout (`ms-*`, `me-*`, `ps-*`, `pe-*`, `start-*`, `end-*`, `text-start`).
+  - No physical direction utilities (`ml-*`, `mr-*`, `left-*`, `right-*`).
+  - Tailwind v4 `@theme` tokens only.
+  - Dark mode supported on all screens (`dark:` variants).
+  - Native browser `fetch` used in `src/services/api.ts` without extra dependencies.
+- **Security**:
+  - Helmet security headers, CORS origin restriction, rate-limiting on authentication routes.
+  - Passwords hashed with `bcryptjs` (salt rounds: 10), never returned in responses.
+  - Soft deletion (`isActive: false`) preserves database integrity.
+  - Fee transactions have an immutable audit trail.

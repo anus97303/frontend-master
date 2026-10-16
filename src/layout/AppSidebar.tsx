@@ -14,6 +14,7 @@ import {
   PlugInIcon,
   TableIcon,
   UserCircleIcon,
+  MortarboardIcon,
 } from "../icons";
 import { cn } from "../utils";
 import SidebarWidget from "./SidebarWidget";
@@ -34,6 +35,24 @@ type NavItem = {
     target?: string;
   }[];
 };
+
+const schoolNavItems: NavItem[] = [
+  {
+    icon: <MortarboardIcon fontSize={24} />,
+    name: "School Management",
+    subItems: [
+      { name: "Dashboard", path: "/school" },
+      { name: "Students", path: "/school/students" },
+      { name: "Teachers", path: "/school/teachers" },
+      { name: "Classes", path: "/school/classes" },
+      { name: "Attendance", path: "/school/attendance" },
+      { name: "Exams & Results", path: "/school/exams" },
+      { name: "Fee Management", path: "/school/fees" },
+      { name: "Notice Board", path: "/school/notices" },
+      { name: "School Settings", path: "/school/settings" },
+    ],
+  },
+];
 
 const navItems: NavItem[] = [
   {
@@ -128,7 +147,7 @@ const AppSidebar: React.FC = () => {
   const { t } = useTranslation();
   const location = useLocation();
   const [openSubmenu, setOpenSubmenu] = useState<{
-    type: "main" | "others";
+    type: "main" | "others" | "school";
     index: number;
   } | null>(null);
   const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>(
@@ -188,7 +207,7 @@ const AppSidebar: React.FC = () => {
     }
   }, [openSubmenu]);
 
-  const handleSubmenuToggle = (index: number, menuType: "main" | "others") => {
+  const handleSubmenuToggle = (index: number, menuType: "main" | "others" | "school") => {
     setOpenSubmenu((prevOpenSubmenu) => {
       if (
         prevOpenSubmenu &&
@@ -201,7 +220,7 @@ const AppSidebar: React.FC = () => {
     });
   };
 
-  const renderMenuItems = (items: NavItem[], menuType: "main" | "others") => (
+  const renderMenuItems = (items: NavItem[], menuType: "main" | "others" | "school") => (
     <ul className="flex flex-col gap-1">
       {items.map((nav, index) => (
         <li key={nav.name}>
@@ -395,6 +414,23 @@ const AppSidebar: React.FC = () => {
       <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
         <nav className="mb-6">
           <div className="flex flex-col gap-4">
+            <div>
+              <h2
+                className={`mb-4 flex text-xs leading-5 text-gray-400 uppercase ${
+                  !isExpanded && !isHovered
+                    ? "xl:justify-center"
+                    : "justify-start"
+                }`}
+              >
+                {isExpanded || isHovered || isMobileOpen ? (
+                  "School System"
+                ) : (
+                  <HorizontaLDots className="size-6" />
+                )}
+              </h2>
+              {renderMenuItems(schoolNavItems, "school")}
+            </div>
+
             <div>
               <h2
                 className={`mb-4 flex text-xs leading-5 text-gray-400 uppercase ${
