@@ -16,6 +16,7 @@ import {
   UserCircleIcon,
   MortarboardIcon,
 } from "../icons";
+import { useSchool } from "@/context/SchoolContext";
 import { cn } from "../utils";
 import SidebarWidget from "./SidebarWidget";
 
@@ -38,19 +39,62 @@ type NavItem = {
 
 const schoolNavItems: NavItem[] = [
   {
-    icon: <MortarboardIcon fontSize={24} />,
-    name: "School Management",
+    icon: <GridIcon fontSize={24} />,
+    name: "Dashboard",
+    path: "/school",
+  },
+  {
+    icon: <UserCircleIcon fontSize={24} />,
+    name: "Admissions & Students",
     subItems: [
-      { name: "Dashboard", path: "/school" },
-      { name: "Students", path: "/school/students" },
-      { name: "Teachers", path: "/school/teachers" },
-      { name: "Classes", path: "/school/classes" },
-      { name: "Attendance", path: "/school/attendance" },
-      { name: "Exams & Results", path: "/school/exams" },
-      { name: "Fee Management", path: "/school/fees" },
-      { name: "Notice Board", path: "/school/notices" },
-      { name: "School Settings", path: "/school/settings" },
+      { name: "Manage Registration", path: "/school/registration" },
+      { name: "Entrance Test & Interview", path: "/school/admissions/evaluations" },
+      { name: "Student Directory", path: "/school/students" },
+      { name: "Transfer Certificate (TC)", path: "/school/students/transfer-certificate" },
     ],
+  },
+  {
+    icon: <MortarboardIcon fontSize={24} />,
+    name: "Faculty & Staff",
+    subItems: [
+      { name: "Teacher Directory", path: "/school/teachers" },
+      { name: "Recruitment & Demo Test", path: "/school/teachers/recruitment" },
+    ],
+  },
+  {
+    icon: <BoxCubeIcon fontSize={24} />,
+    name: "Academics",
+    subItems: [
+      { name: "Classes & Sections", path: "/school/classes" },
+      { name: "Daily Attendance", path: "/school/attendance" },
+    ],
+  },
+  {
+    icon: <TableIcon fontSize={24} />,
+    name: "Fee Management (POS)",
+    subItems: [
+      { name: "Collect Fees (POS)", path: "/school/fees/collect" },
+      { name: "Defaulter List", path: "/school/fees/defaulters" },
+      { name: "Invoices & Receipts", path: "/school/fees" },
+    ],
+  },
+  {
+    icon: <PageIcon fontSize={24} />,
+    name: "Examinations & RMS",
+    subItems: [
+      { name: "Exam Terms & Marksheet", path: "/school/exams" },
+      { name: "Roll Number Slips", path: "/school/exams/roll-numbers" },
+    ],
+  },
+  {
+    icon: <ListIcon fontSize={24} />,
+    name: "Notice Board",
+    path: "/school/notices",
+  },
+  {
+    icon: <PlugInIcon fontSize={24} />,
+    name: "School Settings",
+    path: "/school/settings",
   },
 ];
 
@@ -144,6 +188,7 @@ const othersItems: NavItem[] = [
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered, setIsMobileOpen } =
     useSidebar();
+  const { settings } = useSchool();
   const { t } = useTranslation();
   const location = useLocation();
   const [openSubmenu, setOpenSubmenu] = useState<{
@@ -382,31 +427,19 @@ const AppSidebar: React.FC = () => {
           !isExpanded && !isHovered ? "xl:justify-center" : "justify-start",
         )}
       >
-        <Link to="/">
-          {isExpanded || isHovered || isMobileOpen ? (
-            <>
-              <img
-                className="dark:hidden"
-                src="/images/logo/logo.svg"
-                alt="Logo"
-                width={150}
-                height={40}
-              />
-              <img
-                className="hidden dark:block"
-                src="/images/logo/logo-dark.svg"
-                alt="Logo"
-                width={150}
-                height={40}
-              />
-            </>
-          ) : (
-            <img
-              src="/images/logo/logo-icon.svg"
-              alt="Logo"
-              width={32}
-              height={32}
-            />
+        <Link to="/school" className="flex items-center gap-3">
+          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-500 text-white shadow-theme-xs">
+            <MortarboardIcon className="size-6" />
+          </div>
+          {(isExpanded || isHovered || isMobileOpen) && (
+            <div className="flex flex-col overflow-hidden text-start">
+              <span className="truncate text-sm font-bold text-gray-900 dark:text-white">
+                {settings.schoolName}
+              </span>
+              <span className="truncate text-xs font-medium text-brand-600 dark:text-brand-400">
+                {settings.currentCampus} · {settings.shortName}
+              </span>
+            </div>
           )}
         </Link>
       </div>

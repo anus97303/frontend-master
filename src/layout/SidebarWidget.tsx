@@ -1,25 +1,27 @@
-import { useTranslation } from "react-i18next";
+import { useSchool } from "@/context/SchoolContext";
+import { Link } from "react-router";
 
 export default function SidebarWidget() {
-  const { t } = useTranslation();
+  const { settings } = useSchool();
 
   return (
     <div className="pb-20">
-      <div className="mx-auto w-full max-w-60 rounded-2xl bg-gray-50 px-4 py-5 text-center dark:bg-white/3">
-        <h3 className="mb-2 font-semibold text-gray-900 dark:text-white">
-          {t("sidebar.widget.title")}
+      <div className="mx-auto w-full max-w-60 rounded-2xl border border-gray-100 bg-gray-50/80 p-4 text-center dark:border-gray-800 dark:bg-white/5">
+        <div className="mx-auto mb-2 flex size-9 items-center justify-center rounded-xl bg-brand-500/10 text-brand-500 dark:bg-brand-500/20">
+          🏛️
+        </div>
+        <h3 className="text-xs font-semibold text-gray-900 dark:text-white">
+          {settings.currentCampus}
         </h3>
-        <p className="mb-4 text-theme-sm text-gray-500 dark:text-gray-400">
-          {t("sidebar.widget.description")}
+        <p className="mt-1 text-theme-xs text-gray-500 dark:text-gray-400">
+          Session {settings.currentSession}
         </p>
-        <a
-          href="https://tailadmin.com/pricing"
-          target="_blank"
-          rel="nofollow"
-          className="flex items-center justify-center rounded-lg bg-brand-500 p-3 text-theme-sm font-medium text-white hover:bg-brand-600"
+        <Link
+          to="/school/settings"
+          className="mt-3 flex items-center justify-center rounded-lg bg-brand-500 px-3 py-2 text-theme-xs font-medium text-white transition hover:bg-brand-600"
         >
-          {t("sidebar.widget.purchasePlan")}
-        </a>
+          ⚙️ School Settings
+        </Link>
       </div>
     </div>
   );

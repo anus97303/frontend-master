@@ -6,6 +6,7 @@ import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { useAuth } from "@/context/AuthContext";
+import { useSchool } from "@/context/SchoolContext";
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,6 +17,7 @@ export default function SignInForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { login } = useAuth();
+  const { settings } = useSchool();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -70,10 +72,10 @@ export default function SignInForm() {
         <div>
           <div className="mb-5 sm:mb-8">
             <h1 className="mb-2 text-title-sm font-semibold text-gray-800 sm:text-title-md dark:text-white/90">
-              Sign In to School Portal
+              Sign In to {settings.schoolName}
             </h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              Enter your institutional account credentials to access your portal.
+              Enter your institutional credentials to access your academic and administrative portal.
             </p>
           </div>
 

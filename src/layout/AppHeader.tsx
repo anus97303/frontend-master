@@ -3,6 +3,8 @@
 import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 import NotificationDropdown from "@/components/header/NotificationDropdown";
 import UserDropdown from "@/components/header/UserDropdown";
+import { useSchool } from "@/context/SchoolContext";
+import { MortarboardIcon } from "@/icons";
 import { useSidebar } from "@/context/SidebarContext";
 import { cn } from "@/utils";
 import { useEffect, useRef, useState } from "react";
@@ -11,8 +13,10 @@ import { Link } from "react-router";
 
 const AppHeader: React.FC = () => {
   const { t } = useTranslation("header");
+  const { settings, setCampus } = useSchool();
   const inputRef = useRef<HTMLInputElement>(null);
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
+  const [cacheCleared, setCacheCleared] = useState(false);
 
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
 
@@ -89,17 +93,13 @@ const AppHeader: React.FC = () => {
             {/* Cross Icon */}
           </button>
 
-          <Link to="/" className="xl:hidden">
-            <img
-              className="dark:hidden"
-              src="/images/logo/logo.svg"
-              alt="Logo"
-            />
-            <img
-              className="hidden dark:block"
-              src="/images/logo/logo-dark.svg"
-              alt="Logo"
-            />
+          <Link to="/school" className="flex items-center gap-2 xl:hidden">
+            <div className="flex size-8 items-center justify-center rounded-lg bg-brand-500 text-white">
+              <MortarboardIcon className="size-5" />
+            </div>
+            <span className="text-sm font-bold text-gray-900 dark:text-white">
+              {settings.shortName}
+            </span>
           </Link>
 
           <button
@@ -158,18 +158,49 @@ const AppHeader: React.FC = () => {
         </div>
         <div
           className={cn(
-            "flex w-full items-center justify-between gap-4 px-5 py-4 shadow-theme-md xl:flex xl:justify-end xl:px-0 xl:shadow-none",
+            "flex w-full flex-wrap items-center justify-between gap-3 px-5 py-4 shadow-theme-md xl:flex xl:w-auto xl:justify-end xl:px-0 xl:shadow-none",
             isApplicationMenuOpen ? "flex" : "hidden",
           )}
         >
+          {/* Campus Selector & Academic Year Indicator */}
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50/80 px-2.5 py-1.5 text-xs font-medium text-gray-700 dark:border-gray-800 dark:bg-gray-800/60 dark:text-gray-300">
+              <span className="text-gray-400">Campus:</span>
+              <select
+                value={settings.currentCampus}
+                onChange={(e) => setCampus(e.target.value)}
+                className="bg-transparent font-semibold text-brand-600 focus:outline-hidden dark:text-brand-400"
+              >
+                {settings.campuses.map((c) => (
+                  <option key={c} value={c} className="dark:bg-gray-800 dark:text-white">
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <span className="hidden rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1.5 text-xs font-semibold text-gray-600 sm:inline-block dark:border-gray-800 dark:bg-gray-800 dark:text-gray-300">
+              📅 {settings.currentSession}
+            </span>
+
+            {/* Clear Cache button matching screenshot */}
+            <button
+              type="button"
+              onClick={() => {
+                setCacheCleared(true);
+                setTimeout(() => setCacheCleared(false), 2000);
+              }}
+              className="rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-semibold text-white shadow-theme-xs transition hover:bg-brand-600 focus:outline-hidden"
+            >
+              {cacheCleared ? "✓ Cleared!" : "Clear Cache"}
+            </button>
+          </div>
+
           <div className="flex items-center gap-2 2xsm:gap-3">
             {/* <!-- Dark Mode Toggler --> */}
             <ThemeToggleButton />
-            {/* <!-- Dark Mode Toggler --> */}
 
             <NotificationDropdown />
-
-            {/* <!-- Notification Menu Area --> */}
           </div>
           {/* <!-- User Area --> */}
           <UserDropdown />

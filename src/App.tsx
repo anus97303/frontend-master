@@ -31,6 +31,13 @@ import ExamList from "./pages/School/Exams/ExamList";
 import FeeManage from "./pages/School/Fees/FeeManage";
 import NoticeList from "./pages/School/Notices/NoticeList";
 import SchoolSettings from "./pages/School/Settings/SchoolSettings";
+import ManageRegistration from "./pages/School/Registration/ManageRegistration";
+import StudentEvaluations from "./pages/School/Admissions/StudentEvaluations";
+import TeacherRecruitment from "./pages/School/Teachers/TeacherRecruitment";
+import CollectFees from "./pages/School/Fees/CollectFees";
+import DefaulterList from "./pages/School/Fees/DefaulterList";
+import RollNumberSlips from "./pages/School/Exams/RollNumberSlips";
+import TransferCertificate from "./pages/School/Students/TransferCertificate";
 
 export default function App() {
   return (
@@ -58,6 +65,13 @@ export default function App() {
             <Route path="/school/fees" element={<ProtectedRoute><FeeManage /></ProtectedRoute>} />
             <Route path="/school/notices" element={<ProtectedRoute><NoticeList /></ProtectedRoute>} />
             <Route path="/school/settings" element={<ProtectedRoute><SchoolSettings /></ProtectedRoute>} />
+            <Route path="/school/registration" element={<ProtectedRoute><ManageRegistration /></ProtectedRoute>} />
+            <Route path="/school/admissions/evaluations" element={<ProtectedRoute><StudentEvaluations /></ProtectedRoute>} />
+            <Route path="/school/teachers/recruitment" element={<ProtectedRoute allowedRoles={['admin']}><TeacherRecruitment /></ProtectedRoute>} />
+            <Route path="/school/fees/collect" element={<ProtectedRoute><CollectFees /></ProtectedRoute>} />
+            <Route path="/school/fees/defaulters" element={<ProtectedRoute><DefaulterList /></ProtectedRoute>} />
+            <Route path="/school/exams/roll-numbers" element={<ProtectedRoute><RollNumberSlips /></ProtectedRoute>} />
+            <Route path="/school/students/transfer-certificate" element={<ProtectedRoute><TransferCertificate /></ProtectedRoute>} />
 
             {/* Template Pages */}
             <Route path="/ecommerce" element={<EcommerceHome />} />
